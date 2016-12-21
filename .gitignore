@@ -1,0 +1,9 @@
+# netbeans project files
+nbproject
+
+logs
+
+application/tmp
+application/logs
+
+htdocs/www
