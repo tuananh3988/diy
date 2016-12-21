@@ -1,0 +1,27 @@
+SetEnv APPLICATION_ENV production
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} !^/cgi-bin/
+RewriteCond %{REQUEST_URI} !^/tmp/
+RewriteCond %{REQUEST_URI} !^/kiyaku/
+RewriteCond %{REQUEST_URI} !^/help/
+RewriteCond %{REQUEST_URI} !^/privacy/
+RewriteCond %{REQUEST_URI} !^/company/
+RewriteCond %{REQUEST_URI} !^＼.(js|css|[Gg][Ii][Ff]|[Jj][Pp][Ee]?[Gg]|[Pp][Nn][Gg]|[Ss][Ww][Ff]|[Pp][Dd][Ff]|ico)
+
+RewriteRule !＼.(js|css|[Gg][Ii][Ff]|[Jj][Pp][Ee]?[Gg]|[Pp][Nn][Gg]|[Ss][Ww][Ff]|[Pp][Dd][Ff]|ico)$ index.php [L]
+
+php_value session.cache_limiter none
+
+
+## 下記モバイルでの文字化け対策
+#php_value mbstring.language Japanese
+
+# HTTP入力エンコーディング変換を有効にする
+php_value mbstring.encoding_translation On
+
+# デフォルトの内部エンコーディングを設定
+php_value mbstring.internal_encoding UTF-8
+
+php_flag  display_errors On

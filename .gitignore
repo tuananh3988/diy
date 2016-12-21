@@ -1,9 +1,17 @@
 # netbeans project files
 nbproject
-
+# admin 
 admin/logs
 
 admin/application/tmp
 admin/application/logs
 
 admin/htdocs/www
+
+# api
+
+diy/logs
+diy/application/tmp
+diy/application/logs
+
+diy/htdocs/www
