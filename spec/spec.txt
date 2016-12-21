@@ -1,0 +1,17 @@
+②Androidインストール数→ s? l??ng install android 
+④AOS会員登録者→ s? l??ng user aos 
+⑤iOS退会数→ s? l??ng thoai h?i ios 
+⑥AOS退会数→ s? l??ng thoai h?i aos 
+⑦累計会員数→ lu? k? h?i vien . confirm l?i cach tinh 
+⑧iOS会員登録率→ lu? k? h?i vien ios, confirm l?i cach tinh 
+⑨AOS会員登録率→ luy k? h?i vien aos, confirm l?i cach tinh 
+⑩トータル会員登録率→ t? l? ??ng ky, confirm l?i cachs tinh 
+13, トータル DAU → t?ng s? active user  
+15, AOS投稿数→ s? l??ng post ? aos 
+18, AOS レシピ投稿数→ s? l??ng post recipy aos 
+19, レシピ投稿数→ t?ng s? l??ng bai post recipy 
+20。お気に入り数→ s? l??ng favourite 
+21, 累計お気に入り数→ lu? k? favouritte 
+22, コメント数→ so l??ng comment 
+23,累計コメント数→lu? k? comment 
+24, タグ数→ s? l??ng tag
