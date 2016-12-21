@@ -185,6 +185,12 @@
             if($password == ""){
                 $password = $this -> _createRandam();
             }
+            
+            $type = 1;
+            if (!empty($this->_getParam('device_type')) && in_array($this->_getParam('device_type'), array(1, 2))) {
+                $type = $this->_getParam('device_type');
+            }
+
             $SQL = "INSERT INTO mtb_user
                         SET mail       = ?,
                             login_id   = ?,
@@ -192,8 +198,9 @@
                             login_type = ?,
                             name       = ?,
                             image      = ?,
-                            created    = ?";
-            $param = array($this->_getParam('mail'),$loginID,$password,$this->_getParam('type'),$this->_getParam('name'),$this->_getParam('image',''),time());
+                            created    = ?,
+                            type   = ?";
+            $param = array($this->_getParam('mail'),$loginID,$password,$this->_getParam('type'),$this->_getParam('name'),$this->_getParam('image',''),time(),$type);
             $result = $this -> execute($SQL,$param);
             $userID = $this->getLastID("mtb_user");
             $SQL = "UPDATE mtb_user_uuid

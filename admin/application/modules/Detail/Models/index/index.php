@@ -24,6 +24,8 @@
                         tmpDate.keydate2                 keydate,
                         IFNULL(tmpInstall.installCnt,0)  installCnt,
                         IFNULL(tmpInstall2.installCnt,0) installCnt2,
+                        IFNULL(tmpAosInstall.installAosCnt,0)  installCntAos,
+                        IFNULL(tmpAosInstall2.installAosCnt,0) installCntAos2,
                         IFNULL(tmpList.listCnt,0)        listCnt,
                         IFNULL(tmpList2.listCnt,0)       listCnt2,
                         IFNULL(tmpListUser.listCnt,0)    listUserCnt,
@@ -32,8 +34,10 @@
                         REPLACE(IFNULL(admin_memo.memo,''),'\n',' ')       memoGraph,
                         IFNULL(admin_memo.memo,'')       memo
                     FROM (SELECT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m-%d') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 100) tmp WHERE ".$dateWhere.") tmpDate
-                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
-                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installAosCnt FROM mtb_user WHERE type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpAosInstall ON (tmpAosInstall.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpAosInstall2 ON (tmpAosInstall2.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpList ON (tmpList.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListUser ON (tmpListUser.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 AND dtb_list.type=2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpList2 ON (tmpList2.date = tmpDate.keydate)
