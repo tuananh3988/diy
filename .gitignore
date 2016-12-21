@@ -1,9 +1,9 @@
 # netbeans project files
 nbproject
 
-logs
+admin/logs
 
-application/tmp
-application/logs
+admin/application/tmp
+admin/application/logs
 
-htdocs/www
+admin/htdocs/www
