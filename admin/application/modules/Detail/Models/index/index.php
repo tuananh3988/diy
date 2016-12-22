@@ -32,7 +32,13 @@
                         IFNULL(tmpLoginAos.loginCntAos,0)      loginCntAos,
 
                         IFNULL(tmpList.listCnt,0)        listCnt,
+                        IFNULL(tmpListAos.listCnt,0)        listCntAos,
                         IFNULL(tmpList2.listCnt,0)       listCnt2,
+                        IFNULL(tmpListAos2.listCnt,0)       listCntAos2,
+                        IFNULL(tmpListFavorite.listCnt,0)       listFavorite,
+                        IFNULL(tmpListComment.listCnt,0)       listComment,
+                        IFNULL(tmpListTag.listCnt,0)       listTag,
+                        
                         IFNULL(tmpListUser.listCnt,0)    listUserCnt,
                         IFNULL(tmpList2User.listCnt,0)   listUserCnt2,
                         
@@ -48,9 +54,16 @@
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCnt FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 1 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d')) tmpLogin ON (tmpLogin.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCntAos FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 2 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d')) tmpLoginAos ON (tmpLoginAos.date = tmpDate.keydate)
 
-                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpList ON (tmpList.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE mtb_user.type = 1 AND dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d')) tmpList ON (tmpList.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE mtb_user.type = 2 AND dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d')) tmpListAos ON (tmpListAos.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE dtb_list.deleted = 0 AND dtb_list.type=2 AND mtb_user.type = 1 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d')) tmpList2 ON (tmpList2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE dtb_list.deleted = 0 AND dtb_list.type=2 AND mtb_user.type = 2 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m/%d')) tmpListAos2 ON (tmpListAos2.date = tmpDate.keydate)
+
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list_favorite WHERE dtb_list_favorite.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListFavorite ON (tmpListFavorite.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list_comment GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListComment ON (tmpListComment.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list_tag GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListTag ON (tmpListTag.date = tmpDate.keydate)
+                    
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListUser ON (tmpListUser.date = tmpDate.keydate)
-                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 AND dtb_list.type=2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpList2 ON (tmpList2.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 AND dtb_list.type=2  GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpList2User ON (tmpList2User.date = tmpDate.keydate)
                     
                     LEFT JOIN admin_memo ON (admin_memo.date = tmpDate.keydate2)

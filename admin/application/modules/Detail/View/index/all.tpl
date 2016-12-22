@@ -220,43 +220,20 @@
                     <td>{$aja.loginCnt}</td>
                     <td>{$aja.loginCntAos}</td>
                     <td>{$aja.loginCnt + $aja.loginCntAos}</td>
+                    <td>{$aja.listCnt}</td>
+                    <td>{$aja.listCntAos}</td>
+                    <td>{$aja.listCnt + $aja.listCntAos}</td>
+                    <td>{$aja.listCnt2}</td>
+                    <td>{$aja.listCntAos2}</td>
+                    <td>{$aja.listCnt2 + $aja.listCntAos2}</td>
                     
-                    <td>{$aja.listCnt2} ({$aja.listUserCnt2})</td>
-                    <td>{$aja.installCnt} ({$aja.installCnt2})</td>
-                    <td>{$aja.loginCnt}</td>
-                    <td>{$aja.listCnt} ({$aja.listUserCnt})</td>
-                    <td>{$aja.listCnt2} ({$aja.listUserCnt2})</td>
-                    <td>{$aja.installCnt} ({$aja.installCnt2})</td>
-                    <td>{$aja.loginCnt}</td>
+                    <td>{$aja.listFavorite}</td>
                     
-                    <td>{$aja.installCnt}</td>
-                    <td>{$aja.loginCnt}</td>
-                    <td>{$aja.installCnt2}</td>
-                    <td>{$aja.listCnt2} ({$aja.listUserCnt2})</td>
-                    <td>{$aja.installCnt} ({$aja.installCnt2})</td>
-                </tr>
-            {/foreach}
-        </table>
-        
-        <table border=1>
-            <thead>
-                <tr>
-                    <th >日付</th>
-                    <th >インストール数(登録者数)</th>
-                    <th >DAU</th>
-                    <th >トータル投稿数(投稿者数)</th>
-                    <th >レシピ投稿数(投稿者数)</th>
-                    <th >メモ</th>
-                </tr>
-            </thead>
-            {foreach from=$data item=aja name=pero}
-                <tr align=center>
-                    <td>{$aja.keydate}</td>
-                    <td>{$aja.installCnt} ({$aja.installCnt2})</td>
-                    <td>{$aja.loginCnt}</td>
-                    <td>{$aja.listCnt} ({$aja.listUserCnt})</td>
-                    <td>{$aja.listCnt2} ({$aja.listUserCnt2})</td>
-                    <td><textarea name="memo" id="memo-{$smarty.foreach.pero.iteration}"rows="4" cols="40" onblur="editText(this, '{$aja.keydate}')">{$aja.memo}</textarea></td>
+                    <td>?</td>
+                    <td>{$aja.listComment}</td>
+                    <td>?</td>
+                    <td>{$aja.listTag}</td>
+                    <td>?</td>
                 </tr>
             {/foreach}
         </table>
