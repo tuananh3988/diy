@@ -210,16 +210,17 @@
                     <td>{$aja.installCntAos}</td>
                     <td>{$aja.installCnt2}</td>
                     <td>{$aja.installCntAos2}</td>
-                    <td>{$aja.installCnt} ({$aja.installCnt2})</td>
-                    <td>{$aja.loginCnt}</td>
-                    <td>{$aja.listCnt} ({$aja.listUserCnt})</td>
-                    <td>{$aja.listCnt2} ({$aja.listUserCnt2})</td>
-                    <td>{$aja.installCnt} ({$aja.installCnt2})</td>
-                    <td>{$aja.loginCnt}</td>
+                    <td>{$aja.deactiveIosCnt}</td>
+                    <td>{$aja.deactiveAosCnt}</td>
+                    <td>?</td>
+                    <td>{if $aja.installCnt2 eq 0}0{else}{(($aja.installCnt)/($aja.installCnt2))|string_format:"%.2f"}{/if}</td>
+                    <td>{if $aja.installCntAos2 eq 0}0{else}{$aja.installCntAos/$aja.installCntAos2|string_format:"%.2f"}{/if}</td>
+                    <td>{if ($aja.installCnt2 + $aja.installCntAos2) eq 0}0{else}{(($aja.installCnt + $aja.installCntAos)/($aja.installCnt2 + $aja.installCntAos2))|string_format:"%.2f"}{/if}</td>
                     
-                    <td>{$aja.installCnt}</td>
                     <td>{$aja.loginCnt}</td>
-                    <td>{$aja.installCnt2}</td>
+                    <td>{$aja.loginCntAos}</td>
+                    <td>{$aja.loginCnt + $aja.loginCntAos}</td>
+                    
                     <td>{$aja.listCnt2} ({$aja.listUserCnt2})</td>
                     <td>{$aja.installCnt} ({$aja.installCnt2})</td>
                     <td>{$aja.loginCnt}</td>

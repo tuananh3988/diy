@@ -367,7 +367,7 @@
             }
         }
 
-        public function userDelete(){            
+        public function userDelete(){    
             	$SQL = "DELETE FROM mtb_user_uuid
                     WHERE mtb_user_id = ? AND uuid = ?";
             	$param = array($this -> _userData['id'],$this->_getParam('uuid') );
@@ -376,9 +376,10 @@
                 //deleter user
                 $SQL = "UPDATE mtb_user
                             SET deleted = 1,
-                            uuid = NULL
+                            uuid = NULL,
+                            deleted_date = ?
                         WHERE id = ?";
-                $param = array($this -> _userData['id']);
+                $param = array(time(),$this -> _userData['id']);
                 $this -> execute($SQL,$param);
 
                 //delete follow
