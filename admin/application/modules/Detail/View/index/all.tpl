@@ -56,9 +56,11 @@
             {foreach from=$data item=aja name=pero}
                     {
                         "date": "{$aja.keydate}",
-                        "install": {$aja.installCnt},
-                        "login": {$aja.loginCnt},
-                        "list": {$aja.listCnt},
+                        "install": {$aja.installCnt + installCnt2},
+                        "iOS login": {$aja.loginCnt},
+                        "AOS login": {$aja.loginCntAos},
+                        "iOS list": {$aja.listCnt},
+                        "AOS list": {$aja.listCntAos2},
                         "memo": "{$aja.memoGraph}"
                     },
             {/foreach}
@@ -82,8 +84,21 @@
                         "inside": true,
                         "position": "right",
                         "title": "投稿数"
+                    }, {
+                        "id": "loginAxis1",
+                        "axisAlpha": 0,
+                        "gridAlpha": 0,
+                        "labelsEnabled": false,
+                        "position": "right"
+                    }, {
+                        "id": "listAxis1",
+                        "axisAlpha": 0,
+                        "gridAlpha": 0,
+                        "inside": true,
+                        "position": "right",
+                        "title": "投稿数"
                     }],
-                "graphs": [{
+                        "graphs": [{
                         "alphaField": "alpha",
                         "balloonText": "[[value]] インストール",
                         "dashLengthField": "dashLength",
@@ -95,31 +110,57 @@
                         "valueField": "install",
                         "valueAxis": "インストール"
                     }, {
-                        "balloonText": "DAU:[[value]]人",
+                        "balloonText": "iOSDAU:[[value]]人",
                         "bullet": "round",
                         "bulletBorderAlpha": 1,
                         "useLineColorForBulletBorder": true,
                         "bulletColor": "#FFFFFF",
                         "dashLengthField": "dashLength",
                         "labelPosition": "right",
-                        "labelText": "[[memo]]",
+                        "labelText": "[[value]]",
                         "legendValueText": "[[value]]",
-                        "title": "DAU",
+                        "title": "iOSDAU",
                         "fillAlphas": 0,
-                        "valueField": "login",
+                        "valueField": "iOS login",
                         "valueAxis": "loginAxis"
                     }, {
                         "bullet": "square",
                         "bulletBorderAlpha": 1,
                         "bulletBorderThickness": 1,
                         "dashLengthField": "dashLength",
-                        "balloonText": "投稿数:[[value]]",
+                        "balloonText": "iOS投稿数:[[value]]",
                         "legendPeriodValueText": "合計: [[value.sum]] 回",
-                        "legendValueText": "投稿数:[[value]]",
-                        "title": "投稿数",
+                        "legendValueText": "iOS投稿数:[[value]]",
+                        "title": "iOS投稿数",
                         "fillAlphas": 0,
-                        "valueField": "list",
+                        "valueField": "iOS list",
                         "valueAxis": "listAxis"
+                    }, {
+                        "balloonText": "AOSDAU:[[value]]人",
+                        "bullet": "round",
+                        "bulletBorderAlpha": 1,
+                        "useLineColorForBulletBorder": true,
+                        "bulletColor": "#FFFFFF",
+                        "dashLengthField": "dashLength",
+                        "labelPosition": "right",
+                        "labelText": "[[value]]",
+                        "legendValueText": "[[value]]",
+                        "title": "AOSDAU",
+                        "fillAlphas": 0,
+                        "valueField": "AOS login",
+                        "valueAxis": "loginAxis1"
+                    }, {
+                        "bullet": "square",
+                        "bulletBorderAlpha": 1,
+                        "bulletBorderThickness": 1,
+                        "dashLengthField": "dashLength",
+                        "balloonText": "AOS投稿数:[[value]]",
+                        "legendPeriodValueText": "合計: [[value.sum]] 回",
+                        "legendValueText": "AOS投稿数:[[value]]",
+                        "title": "AOS投稿数",
+                        "fillAlphas": 0,
+                        "valueField": "AOS list",
+                        "valueAxis": "listAxis1"
                     }],
                 "chartCursor": {
                     "categoryBalloonDateFormat": "DD",
@@ -138,6 +179,12 @@
                         }, {
                             "period": "WW",
                             "format": "MMM DD"
+                        }, {
+                            "period": "MM",
+                            "format": "MMM"
+                        }, {
+                            "period": "YYYY",
+                            "format": "YYYY"
                         }, {
                             "period": "MM",
                             "format": "MMM"
