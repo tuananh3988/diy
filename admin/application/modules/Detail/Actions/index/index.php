@@ -38,9 +38,9 @@
         public function createCsvAction(){
             $this -> _html = false;
             $data = $this -> _model -> getAllData();
-            $csv_data = "日付,インストール数,ログイン数,投稿数"."\n";
+            $csv_data = "日付,iOSインストール,Androidインストール,iOS会員登録者（男女）,AOS会員登録者（男女）,iOS退会数（男女）,AOS退会数（男女）,累計会員数（退会者は引く） ,iOS会員登録率,AOS会員登録率 ,トータル会員登録率,iOS DAU,AOS DAU,トータル DAU ,iOS　投稿数,AOS投稿数,トータル投稿数,iOSレシピ投稿数,AOS レシピ投稿数,トータルレシピ投稿数,お気に入り数→新規,累計お気に入り数,コメント数 ,累計コメント数,タグ数→新規 ,累計タグ数"."\n";
             for ( $i = 0 ; $i < count ( $data ) ; $i ++ ) {
-                $csv_data.= $data[$i]['keydate'].','.$data[$i]['installCnt'].','.$data[$i]['listCnt'].','.$data[$i]['loginCnt'].','.$data[$i]['memo']."\n";
+                $csv_data.= $data[$i]['keydate'].','.$data[$i]['installCnt'].','.$data[$i]['installCntAos'].','.$data[$i]['installCnt2'].','.$data[$i]['installCntAos2'].','.$data[$i]['deactiveIosCnt'].','.$data[$i]['deactiveAosCnt'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2']."\n";
             }
             //出力ファイル名の作成
             $csv_file = "DIY一括データ_". mt_rand() .'.csv';
