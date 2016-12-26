@@ -28,9 +28,10 @@
                         IFNULL(tmpAosInstall2.installAosCnt,0) installCntAos2,
                         IFNULL(tmpIosDeactive.deactiveIosCnt,0) deactiveIosCnt,
                         IFNULL(tmpAosDeactive.deactiveAosCnt,0) deactiveAosCnt,
+                        (IFNULL(tmpInstall2.installCnt,0) + IFNULL(tmpAosInstall2.installAosCnt,0) - IFNULL(tmpIosDeactive.deactiveIosCnt,0) - IFNULL(tmpAosDeactive.deactiveAosCnt,0)) totalLK,
                         IFNULL(tmpLogin.loginCnt,0)      loginCnt,
                         IFNULL(tmpLoginAos.loginCntAos,0)      loginCntAos,
-
+                        
                         IFNULL(tmpList.listCnt,0)        listCnt,
                         IFNULL(tmpListAos.listCnt,0)        listCntAos,
                         IFNULL(tmpList2.listCnt,0)       listCnt2,

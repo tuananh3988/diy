@@ -250,7 +250,15 @@
                     <th >累計タグ数</th>
                 </tr>
             </thead>
+            {$total7 = 0}
+            {$total21 = 0}
+            {$total23 = 0}
+            {$total25 = 0}
             {foreach from=$data item=aja name=pero}
+                {$total7 = $total7 + $aja.totalLK}
+                {$total21 = $total21 + $aja.listFavorite}
+                {$total23 = $total23 + $aja.listComment}
+                {$total25 = $total25 + $aja.listTag}
                 <tr align=center>
                     <td>{$aja.keydate}</td>
                     <td>{$aja.installCnt}</td>
@@ -259,7 +267,7 @@
                     <td>{$aja.installCntAos2}</td>
                     <td>{$aja.deactiveIosCnt}</td>
                     <td>{$aja.deactiveAosCnt}</td>
-                    <td>?</td>
+                    <td>{$total7}</td>
                     <td>{if $aja.installCnt2 eq 0}0{else}{(($aja.installCnt)/($aja.installCnt2))|string_format:"%.2f"}{/if}</td>
                     <td>{if $aja.installCntAos2 eq 0}0{else}{$aja.installCntAos/$aja.installCntAos2|string_format:"%.2f"}{/if}</td>
                     <td>{if ($aja.installCnt2 + $aja.installCntAos2) eq 0}0{else}{(($aja.installCnt + $aja.installCntAos)/($aja.installCnt2 + $aja.installCntAos2))|string_format:"%.2f"}{/if}</td>
@@ -276,11 +284,11 @@
                     
                     <td>{$aja.listFavorite}</td>
                     
-                    <td>?</td>
+                    <td>{$total21}</td>
                     <td>{$aja.listComment}</td>
-                    <td>?</td>
+                    <td>{$total23}</td>
                     <td>{$aja.listTag}</td>
-                    <td>?</td>
+                    <td>{$total25}</td>
                 </tr>
             {/foreach}
         </table>
