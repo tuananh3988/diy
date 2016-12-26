@@ -4,7 +4,6 @@
 		
 		//push登録
         public function insertToken(){
-        	$return = false;
         	$count = $this->getCount('mtb_token',' uuid = ?',array($this->_getParam('uuid','')));
         	if($count==0){
         		$count = $this->getCount('mtb_token',' token = ?',array($this->_getParam('token','')));
@@ -14,16 +13,17 @@
 	        		$param = array($this->_getParam('token'));
 	        		$this->execute($SQL,$param);
         		}
-		        $SQL = "INSERT INTO mtb_token(uuid,token,created)";
-		        $insertParam = array($this->_getParam('uuid'),$this->_getParam('token'),time());
+		        $SQL = "INSERT INTO mtb_token(uuid,token,type,created)";
+		        $insertParam = array($this->_getParam('uuid'),$this->_getParam('token'),$this->_getParam('device_type', 0),time());
 		        $return = $this->executeIns($SQL,$insertParam);
         	}
         	else{
 		        $SQL = "UPDATE mtb_token
 		        				SET token   = ?,
+                                                        type = ?,
 		        					created = ?
 						WHERE uuid = '".$this->_getParam('uuid')."'";
-				$where = array($this->_getParam('token'),time());
+				$where = array($this->_getParam('token'),$this->_getParam('device_type', 0),time());
 		        $return = $this->execute($SQL,$where);
         	}
 	        return $return;

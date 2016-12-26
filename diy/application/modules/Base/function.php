@@ -270,6 +270,8 @@ ini_set( 'display_errors', TEST );
 								  'badge'   => (int)$badge,
 								  'test'    => $test);
 			    system("php ".dirname(__FILE__)."/../../lib/ios/push.php '" . serialize($sendAray) . "' > /dev/null &");
+                            
+                            system("php ".dirname(__FILE__)."/../../lib/aos/pushnotification.php '" . serialize($sendAray) . "' > /dev/null &");
 	        }
         }
         

@@ -75,7 +75,7 @@ RESTART:
 	$SQL = "SELECT
 				token
 			FROM mtb_token
-			WHERE send_error = 0 ".$where."
+			WHERE send_error = 0 AND type = 1 ".$where."
 			ORDER BY id DESC ";
 	$pushToken = $DB -> getRows($SQL,$param);
 	$pushToken = $pushToken['data'];
