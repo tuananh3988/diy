@@ -39,8 +39,38 @@
             $this -> _html = false;
             $data = $this -> _model -> getAllData();
             $csv_data = "日付,iOSインストール,Androidインストール,iOS会員登録者（男女）,AOS会員登録者（男女）,iOS退会数（男女）,AOS退会数（男女）,累計会員数（退会者は引く） ,iOS会員登録率,AOS会員登録率 ,トータル会員登録率,iOS DAU,AOS DAU,トータル DAU ,iOS　投稿数,AOS投稿数,トータル投稿数,iOSレシピ投稿数,AOS レシピ投稿数,トータルレシピ投稿数,お気に入り数→新規,累計お気に入り数,コメント数 ,累計コメント数,タグ数→新規 ,累計タグ数"."\n";
+            $keyArr = array('keydate', 'installCnt', 'installCntAos', 'installCnt2', 'installCntAos2', 'deactiveIosCnt',
+                'deactiveAosCnt', 'total7', 'r8', 'r9', 'r10',
+                'loginCnt', 'loginCntAos', 'r13', 'listCnt', 'listCntAos',
+                'r16', 'listCnt2', 'listCntAos2', 'r19', 'listFavorite',
+                'total21', 'listComment', 'total23', 'listTag', 'total25');
+            $total7 = $total21 = $total23 = $total25 = 0;
             for ( $i = 0 ; $i < count ( $data ) ; $i ++ ) {
-                $csv_data.= $data[$i]['keydate'].','.$data[$i]['installCnt'].','.$data[$i]['installCntAos'].','.$data[$i]['installCnt2'].','.$data[$i]['installCntAos2'].','.$data[$i]['deactiveIosCnt'].','.$data[$i]['deactiveAosCnt'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2']."\n";
+                $total7 += $data[$i]['totalLK'];
+                $total21 += $data[$i]['listFavorite'];
+                $total23 += $data[$i]['listComment'];
+                $total25 += $data[$i]['listTag'];
+                $data[$i]['total7'] = $total7;
+                $data[$i]['total21'] = $total21;
+                $data[$i]['total23'] = $total23;
+                $data[$i]['total25'] = $total25;
+                $data[$i]['r8'] = round($data[$i]['installCnt2'] != 0 ? $data[$i]['installCnt'] / $data[$i]['installCnt2'] : 0 , 2);
+                $data[$i]['r9'] = round($data[$i]['installCntAos2'] != 0 ? $data[$i]['installCntAos'] / $data[$i]['installCntAos2'] : 0, 2);
+                $data[$i]['r10'] = round(($data[$i]['installCnt2'] + $data[$i]['installCntAos2']) != 0 ? ($data[$i]['installCnt'] + $data[$i]['installCntAos']) / ($data[$i]['installCnt2'] + $data[$i]['installCntAos2']) : 0, 2);
+                $data[$i]['r13'] = $data[$i]['loginCnt'] + $data[$i]['loginCntAos'];
+                $data[$i]['r16'] = $data[$i]['listCnt'] + $data[$i]['listCntAos'];
+                $data[$i]['r19'] = $data[$i]['listCnt2'] + $data[$i]['listCntAos2'];
+                foreach ($keyArr as $k) {
+                    $csv_data .= $data[$i][$k];
+                    if ($k == 'total25') {
+                        $csv_data .= "\n";
+                    }
+                    else {
+                        $csv_data .= ',';
+                    }
+                }
+
+               // $csv_data.= $data[$i]['keydate'].','.$data[$i]['installCnt'].','.$data[$i]['installCntAos'].','.$data[$i]['installCnt2'].','.$data[$i]['installCntAos2'].','.$data[$i]['deactiveIosCnt'].','.$data[$i]['deactiveAosCnt'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2'].','.$data[$i]['installCntAos2']."\n";
             }
             //出力ファイル名の作成
             $csv_file = "DIY一括データ_". mt_rand() .'.csv';
@@ -157,6 +187,18 @@
             }
             
             $data = $this -> _model -> addQuest();
+        }
+        
+        public function processDataForCsv($data, $key) {
+            switch ($key) {
+                case '':
+
+
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
