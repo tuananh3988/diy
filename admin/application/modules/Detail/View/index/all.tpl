@@ -254,7 +254,7 @@
             {$total21 = 0}
             {$total23 = 0}
             {$total25 = 0}
-            {foreach from=$data item=aja name=pero}
+            {foreach from=$datas item=aja name=pero}
                 {$total7 = $total7 + $aja.totalLK}
                 {$total21 = $total21 + $aja.listFavorite}
                 {$total23 = $total23 + $aja.listComment}

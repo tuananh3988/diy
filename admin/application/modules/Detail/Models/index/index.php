@@ -75,6 +75,80 @@
             return $result;
         }
         
+        public function getAllDataMonth()
+    	{
+        	
+			$date1  = $this->_getParam('date1',"");
+			$date2  = $this->_getParam('date2',"");
+			
+			$dateWhere = "";
+			if($date1 != ""){
+    			$dateWhere = " DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') >= '".$date1."' ";
+            }
+            else{
+    			$dateWhere = " DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') >= '2016/09/27' ";
+            }
+			
+			if($date2 != ""){
+    			$dateWhere .= " AND DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') <= '".$date2."' ";
+            }
+			
+        	
+        	$SQL = "SELECT
+                        tmpDate.keydate2                 keydate,
+                        IFNULL(tmpInstall.installCnt,0)  installCnt,
+                        IFNULL(tmpInstall2.installCnt,0) installCnt2,
+                        IFNULL(tmpAosInstall.installAosCnt,0)  installCntAos,
+                        IFNULL(tmpAosInstall2.installAosCnt,0) installCntAos2,
+                        IFNULL(tmpIosDeactive.deactiveIosCnt,0) deactiveIosCnt,
+                        IFNULL(tmpAosDeactive.deactiveAosCnt,0) deactiveAosCnt,
+                        (IFNULL(tmpInstall2.installCnt,0) + IFNULL(tmpAosInstall2.installAosCnt,0) - IFNULL(tmpIosDeactive.deactiveIosCnt,0) - IFNULL(tmpAosDeactive.deactiveAosCnt,0)) totalLK,
+                        IFNULL(tmpLogin.loginCnt,0)      loginCnt,
+                        IFNULL(tmpLoginAos.loginCntAos,0)      loginCntAos,
+                        
+                        IFNULL(tmpList.listCnt,0)        listCnt,
+                        IFNULL(tmpListAos.listCnt,0)        listCntAos,
+                        IFNULL(tmpList2.listCnt,0)       listCnt2,
+                        IFNULL(tmpListAos2.listCnt,0)       listCntAos2,
+                        IFNULL(tmpListFavorite.listCnt,0)       listFavorite,
+                        IFNULL(tmpListComment.listCnt,0)       listComment,
+                        IFNULL(tmpListTag.listCnt,0)       listTag,
+                        
+                        IFNULL(tmpListUser.listCnt,0)    listUserCnt,
+                        IFNULL(tmpList2User.listCnt,0)   listUserCnt2,
+                        
+                        REPLACE(IFNULL(admin_memo.memo,''),'\n',' ')       memoGraph,
+                        IFNULL(admin_memo.memo,'')       memo
+                    FROM (SELECT DISTINCT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 100) tmp WHERE ".$dateWhere.") tmpDate
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installAosCnt FROM mtb_user WHERE type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpAosInstall ON (tmpAosInstall.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpAosInstall2 ON (tmpAosInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveIosCnt FROM mtb_user WHERE deleted = 1 AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpIosDeactive ON (tmpIosDeactive.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveAosCnt FROM mtb_user WHERE deleted = 1 AND type = 2 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpAosDeactive ON (tmpAosDeactive.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCnt FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 1 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m')) tmpLogin ON (tmpLogin.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCntAos FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 2 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m')) tmpLoginAos ON (tmpLoginAos.date = tmpDate.keydate)
+
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE mtb_user.type = 1 AND dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m')) tmpList ON (tmpList.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE mtb_user.type = 2 AND dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m')) tmpListAos ON (tmpListAos.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE dtb_list.deleted = 0 AND dtb_list.type=2 AND mtb_user.type = 1 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m')) tmpList2 ON (tmpList2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id WHERE dtb_list.deleted = 0 AND dtb_list.type=2 AND mtb_user.type = 2 GROUP BY DATE_FORMAT(from_unixtime(dtb_list.created),'%Y/%m')) tmpListAos2 ON (tmpListAos2.date = tmpDate.keydate)
+
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list_favorite WHERE dtb_list_favorite.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListFavorite ON (tmpListFavorite.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list_comment GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListComment ON (tmpListComment.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list_tag GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListTag ON (tmpListTag.date = tmpDate.keydate)
+                    
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListUser ON (tmpListUser.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 AND dtb_list.type=2  GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpList2User ON (tmpList2User.date = tmpDate.keydate)
+                    
+                    LEFT JOIN admin_memo ON (admin_memo.date = tmpDate.keydate2)
+                    ORDER BY tmpDate.keydate ASC";
+            $param  = array();
+            $result = $this -> getRows($SQL,$param);
+            
+            return $result;
+        }
+        
         public function editText()
         {
             $param = array($this->_getParam('date'));

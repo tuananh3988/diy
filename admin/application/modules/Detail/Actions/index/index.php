@@ -8,12 +8,29 @@
 	        $this -> _settingSmarty();
             
             $data = $this -> _model -> getAllData();
+            $dataMonth = $this -> _model -> getAllDataMonth();
+            $datas = array();
+            foreach ($data as $k => $d) {
+                $date = explode('-', $d['keydate']);
+                if ($date[2] == '01' && isset($data[$k - 1])) {
+                    $date = explode('-', $data[$k - 1]['keydate']);
+                    $month = $date[0] . '-' . $date[1];
+                    foreach ($dataMonth as $km => $m) {
+                        if ($month == $m['keydate']) {
+                            $datas[] = $m;
+                        }
+                    }
+                }
+                
+                $datas[] = $d;
+            }
             
+    	    $this -> setViewParam('date1',$this->_getParam('date1',""));
+    	    $this -> setViewParam('date2',$this->_getParam('date2',""));
             $ids = "";
             
     	    $this -> setViewParam('data',$data);
-    	    $this -> setViewParam('date1',$this->_getParam('date1',""));
-    	    $this -> setViewParam('date2',$this->_getParam('date2',""));
+            $this -> setViewParam('datas',$datas);
         }
         
         public function edittextAction(){
