@@ -17,11 +17,13 @@
                     $month = $date[0] . '-' . $date[1];
                     foreach ($dataMonth as $km => $m) {
                         if ($month == $m['keydate']) {
+                            $m['month'] = 1;
                             $datas[] = $m;
                         }
                     }
                 }
                 
+                $d['month'] = 0;
                 $datas[] = $d;
             }
             

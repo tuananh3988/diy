@@ -255,11 +255,14 @@
             {$total23 = 0}
             {$total25 = 0}
             {foreach from=$datas item=aja name=pero}
-                {$total7 = $total7 + $aja.totalLK}
-                {$total21 = $total21 + $aja.listFavorite}
-                {$total23 = $total23 + $aja.listComment}
-                {$total25 = $total25 + $aja.listTag}
-                <tr align=center>
+                {if $aja.month neq 1}
+                    {$total7 = $total7 + $aja.totalLK}
+                    {$total21 = $total21 + $aja.listFavorite}
+                    {$total23 = $total23 + $aja.listComment}
+                    {$total25 = $total25 + $aja.listTag}
+                {/if}
+                
+                <tr align=center style="{if $aja.month eq 1} color:red;{/if}">
                     <td>{$aja.keydate}</td>
                     <td>{$aja.installCnt}</td>
                     <td>{$aja.installCntAos}</td>
