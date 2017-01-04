@@ -24,7 +24,7 @@ $uuid = $uuid['data']['uuid'];
 $SQL = "SELECT
                 token
         FROM mtb_token
-        WHERE send_error = 0 AND type = 1 AND uuid = ?
+        WHERE send_error = 0 AND type = 2 AND uuid = ?
         ORDER BY id DESC ";
 $pushToken = $DB->getRows($SQL, array($uuid));
 $pushToken = $pushToken['data'];
