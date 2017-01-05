@@ -266,10 +266,10 @@
                     <td>{$aja.keydate}</td>
                     <td>{$aja.installCnt}</td>
                     <td>{$aja.installCntAos}</td>
-                    <td>{$aja.installCnt2}</td>
-                    <td>{$aja.installCntAos2}</td>
-                    <td>{$aja.deactiveIosCnt}</td>
-                    <td>{$aja.deactiveAosCnt}</td>
+                    <td>{$aja.installCnt2}（男{$aja.installCnt2Men}・女{$aja.installCnt2Women}）</td>
+                    <td>{$aja.installCntAos2}（男{$aja.installCntAos2Men}・女{$aja.installCntAos2Women}）</td>
+                    <td>{$aja.deactiveIosCnt}（男{$aja.deactiveIosCntMen}・女{$aja.deactiveIosCntWomen}）</td>
+                    <td>{$aja.deactiveAosCnt}（男{$aja.deactiveAosCntMen}・女{$aja.deactiveAosCntWomen}）</td>
                     <td>{$total7}</td>
                     <td>{if $aja.installCnt2 eq 0}0{else}{(($aja.installCnt)/($aja.installCnt2))|string_format:"%.2f"}{/if}</td>
                     <td>{if $aja.installCntAos2 eq 0}0{else}{$aja.installCntAos/$aja.installCntAos2|string_format:"%.2f"}{/if}</td>

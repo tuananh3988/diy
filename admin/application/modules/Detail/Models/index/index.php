@@ -24,10 +24,18 @@
                         tmpDate.keydate2                 keydate,
                         IFNULL(tmpInstall.installCnt,0)  installCnt,
                         IFNULL(tmpInstall2.installCnt,0) installCnt2,
+                        IFNULL(tmpInstall2Women.installCnt,0) installCnt2Women,
+                        IFNULL(tmpInstall2Men.installCnt,0) installCnt2Men,
                         IFNULL(tmpAosInstall.installAosCnt,0)  installCntAos,
                         IFNULL(tmpAosInstall2.installAosCnt,0) installCntAos2,
+                        IFNULL(tmpAosInstall2Men.installAosCnt,0) installCntAos2Men,
+                        IFNULL(tmpAosInstall2women.installAosCnt,0) installCntAos2Women,
                         IFNULL(tmpIosDeactive.deactiveIosCnt,0) deactiveIosCnt,
+                        IFNULL(tmpIosDeactiveMen.deactiveIosCnt,0) deactiveIosCntMen,
+                        IFNULL(tmpIosDeactiveWomen.deactiveIosCnt,0) deactiveIosCntWomen,
                         IFNULL(tmpAosDeactive.deactiveAosCnt,0) deactiveAosCnt,
+                        IFNULL(tmpAosDeactiveMen.deactiveAosCnt,0) deactiveAosCntMen,
+                        IFNULL(tmpAosDeactiveWomen.deactiveAosCnt,0) deactiveAosCntWomen,
                         (IFNULL(tmpInstall2.installCnt,0) + IFNULL(tmpAosInstall2.installAosCnt,0) - IFNULL(tmpIosDeactive.deactiveIosCnt,0) - IFNULL(tmpAosDeactive.deactiveAosCnt,0)) totalLK,
                         IFNULL(tmpLogin.loginCnt,0)      loginCnt,
                         IFNULL(tmpLoginAos.loginCntAos,0)      loginCntAos,
@@ -48,10 +56,18 @@
                     FROM (SELECT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m-%d') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 100) tmp WHERE ".$dateWhere.") tmpDate
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2Men ON (tmpInstall2Men.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2Women ON (tmpInstall2Women.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installAosCnt FROM mtb_user WHERE type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpAosInstall ON (tmpAosInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpAosInstall2 ON (tmpAosInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpAosInstall2Men ON (tmpAosInstall2Men.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpAosInstall2Women ON (tmpAosInstall2Women.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') date,COUNT(1) deactiveIosCnt FROM mtb_user WHERE deleted = 1 AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') ) tmpIosDeactive ON (tmpIosDeactive.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') date,COUNT(1) deactiveIosCnt FROM mtb_user WHERE deleted = 1 AND type = 1 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') ) tmpIosDeactiveMen ON (tmpIosDeactiveMen.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') date,COUNT(1) deactiveIosCnt FROM mtb_user WHERE deleted = 1 AND type = 1 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') ) tmpIosDeactiveWomen ON (tmpIosDeactiveWomen.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') date,COUNT(1) deactiveAosCnt FROM mtb_user WHERE deleted = 1 AND type = 2 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') ) tmpAosDeactive ON (tmpAosDeactive.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') date,COUNT(1) deactiveAosCnt FROM mtb_user WHERE deleted = 1 AND type = 2 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') ) tmpAosDeactiveMen ON (tmpAosDeactiveMen.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') date,COUNT(1) deactiveAosCnt FROM mtb_user WHERE deleted = 1 AND type = 2 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m/%d') ) tmpAosDeactiveWomen ON (tmpAosDeactiveWomen.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCnt FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 1 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d')) tmpLogin ON (tmpLogin.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCntAos FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 2 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m/%d')) tmpLoginAos ON (tmpLoginAos.date = tmpDate.keydate)
 
@@ -98,10 +114,18 @@
                         tmpDate.keydate2                 keydate,
                         IFNULL(tmpInstall.installCnt,0)  installCnt,
                         IFNULL(tmpInstall2.installCnt,0) installCnt2,
+                        IFNULL(tmpInstall2Women.installCnt,0) installCnt2Women,
+                        IFNULL(tmpInstall2Men.installCnt,0) installCnt2Men,
                         IFNULL(tmpAosInstall.installAosCnt,0)  installCntAos,
                         IFNULL(tmpAosInstall2.installAosCnt,0) installCntAos2,
+                        IFNULL(tmpAosInstall2Men.installAosCnt,0) installCntAos2Men,
+                        IFNULL(tmpAosInstall2Women.installAosCnt,0) installCntAos2Women,
                         IFNULL(tmpIosDeactive.deactiveIosCnt,0) deactiveIosCnt,
+                        IFNULL(tmpIosDeactiveMen.deactiveIosCnt,0) deactiveIosCntMen,
+                        IFNULL(tmpIosDeactiveWomen.deactiveIosCnt,0) deactiveIosCntWomen,
                         IFNULL(tmpAosDeactive.deactiveAosCnt,0) deactiveAosCnt,
+                        IFNULL(tmpAosDeactiveMen.deactiveAosCnt,0) deactiveAosCntMen,
+                        IFNULL(tmpAosDeactiveWomen.deactiveAosCnt,0) deactiveAosCntWomen,
                         (IFNULL(tmpInstall2.installCnt,0) + IFNULL(tmpAosInstall2.installAosCnt,0) - IFNULL(tmpIosDeactive.deactiveIosCnt,0) - IFNULL(tmpAosDeactive.deactiveAosCnt,0)) totalLK,
                         IFNULL(tmpLogin.loginCnt,0)      loginCnt,
                         IFNULL(tmpLoginAos.loginCntAos,0)      loginCntAos,
@@ -122,10 +146,18 @@
                     FROM (SELECT DISTINCT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 100) tmp WHERE ".$dateWhere.") tmpDate
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall2Men ON (tmpInstall2Men.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall2Women ON (tmpInstall2Women.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installAosCnt FROM mtb_user WHERE type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpAosInstall ON (tmpAosInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpAosInstall2 ON (tmpAosInstall2.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpAosInstall2Men ON (tmpAosInstall2Men.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installAosCnt FROM mtb_user WHERE name != '' AND type = 2 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpAosInstall2Women ON (tmpAosInstall2Women.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveIosCnt FROM mtb_user WHERE deleted = 1 AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpIosDeactive ON (tmpIosDeactive.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveIosCnt FROM mtb_user WHERE deleted = 1 AND type = 1 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpIosDeactiveMen ON (tmpIosDeactiveMen.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveIosCnt FROM mtb_user WHERE deleted = 1 AND type = 1 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpIosDeactiveWomen ON (tmpIosDeactiveWomen.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveAosCnt FROM mtb_user WHERE deleted = 1 AND type = 2 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpAosDeactive ON (tmpAosDeactive.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveAosCnt FROM mtb_user WHERE deleted = 1 AND type = 2 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpAosDeactiveMen ON (tmpAosDeactiveMen.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') date,COUNT(1) deactiveAosCnt FROM mtb_user WHERE deleted = 1 AND type = 2 AND sex = 1 GROUP BY DATE_FORMAT(from_unixtime(deleted_date),'%Y/%m') ) tmpAosDeactiveWomen ON (tmpAosDeactiveWomen.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCnt FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 1 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m')) tmpLogin ON (tmpLogin.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m') date,COUNT(DISTINCT(dtb_login_history.mtb_user_id)) loginCntAos FROM dtb_login_history INNER JOIN mtb_user ON dtb_login_history.mtb_user_id = mtb_user.id WHERE mtb_user.type = 2 GROUP BY DATE_FORMAT(from_unixtime(dtb_login_history.created),'%Y/%m')) tmpLoginAos ON (tmpLoginAos.date = tmpDate.keydate)
 
