@@ -29,7 +29,7 @@
                         IFNULL(tmpAosInstall.installAosCnt,0)  installCntAos,
                         IFNULL(tmpAosInstall2.installAosCnt,0) installCntAos2,
                         IFNULL(tmpAosInstall2Men.installAosCnt,0) installCntAos2Men,
-                        IFNULL(tmpAosInstall2women.installAosCnt,0) installCntAos2Women,
+                        IFNULL(tmpAosInstall2Women.installAosCnt,0) installCntAos2Women,
                         IFNULL(tmpIosDeactive.deactiveIosCnt,0) deactiveIosCnt,
                         IFNULL(tmpIosDeactiveMen.deactiveIosCnt,0) deactiveIosCntMen,
                         IFNULL(tmpIosDeactiveWomen.deactiveIosCnt,0) deactiveIosCntWomen,
