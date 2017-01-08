@@ -4,6 +4,7 @@
 		
 		//push登録
         public function insertToken(){
+                $return = false;
         	$count = $this->getCount('mtb_token',' uuid = ?',array($this->_getParam('uuid','')));
         	if($count==0){
         		$count = $this->getCount('mtb_token',' token = ?',array($this->_getParam('token','')));

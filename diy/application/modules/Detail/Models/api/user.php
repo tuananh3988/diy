@@ -444,8 +444,8 @@
                         <p>■通報された人</p>
                         <p>・名前：'.$reportUserName.' </p>';
 
-                //$to      = 'info@theappbase.com'; 
-                $to      = 'nhatnh47@gmail.com';                                
+                $to      = 'info@theappbase.com'; 
+                //$to      = 'nhatnh47@gmail.com';                                
 
 // Always set content-type when sending HTML email
 $headers = "MIME-Version: 1.0" . "\r\n";
