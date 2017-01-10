@@ -68,8 +68,7 @@
                         "iOS login": {$aja.loginCnt},
                         "AOS login": {$aja.loginCntAos},
                         "iOS list": {$aja.listCnt},
-                        "AOS list": {$aja.listCntAos2},
-                        "memo": "{$aja.memoGraph}"
+                        "AOS list": {$aja.listCntAos2}
                     },
             {/foreach}
                 ],

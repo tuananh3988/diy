@@ -49,10 +49,8 @@
                         IFNULL(tmpListTag.listCnt,0)       listTag,
                         
                         IFNULL(tmpListUser.listCnt,0)    listUserCnt,
-                        IFNULL(tmpList2User.listCnt,0)   listUserCnt2,
+                        IFNULL(tmpList2User.listCnt,0)   listUserCnt2
                         
-                        REPLACE(IFNULL(admin_memo.memo,''),'\n',' ')       memoGraph,
-                        IFNULL(admin_memo.memo,'')       memo
                     FROM (SELECT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m-%d') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 30) tmp WHERE ".$dateWhere.") tmpDate
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
@@ -83,7 +81,6 @@
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListUser ON (tmpListUser.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 AND dtb_list.type=2  GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpList2User ON (tmpList2User.date = tmpDate.keydate)
                     
-                    LEFT JOIN admin_memo ON (admin_memo.date = tmpDate.keydate2)
                     ORDER BY tmpDate.keydate ASC";
             $param  = array();
             $result = $this -> getRows($SQL,$param);
