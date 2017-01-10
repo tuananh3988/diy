@@ -63,13 +63,16 @@ RESTART:
 				FROM mtb_user_uuid
 				WHERE mtb_user_id = ?";
 		$param = array($sendUserid);
-		$uuid  = $DB -> getRow($SQL,$param);
-		$uuid  = $uuid['data']['uuid'];
-		
-		
-		$param = array($uuid);
-		
-		$where = " AND uuid = ?";
+		$uuid  = $DB -> getRows($SQL,$param);
+		//$uuids  = $uuid['data']['uuid'];
+		$uuids  = $uuid['data'];
+		$uuidArr = array();
+		for($i=0;$i<count($uuids);$i++){
+			$uuidArr[] = $uuids[$i]['uuid'];
+		}
+		$uuidStr =  implode("','",$uuidArr);
+		$param = array();
+		$where = " AND uuid in ('".$uuidStr."')";
 	}
 	
 	$SQL = "SELECT
