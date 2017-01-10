@@ -53,7 +53,7 @@
                         
                         REPLACE(IFNULL(admin_memo.memo,''),'\n',' ')       memoGraph,
                         IFNULL(admin_memo.memo,'')       memo
-                    FROM (SELECT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m-%d') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 100) tmp WHERE ".$dateWhere.") tmpDate
+                    FROM (SELECT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m-%d') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 30) tmp WHERE ".$dateWhere.") tmpDate
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2Men ON (tmpInstall2Men.date = tmpDate.keydate)
@@ -143,7 +143,7 @@
                         
                         REPLACE(IFNULL(admin_memo.memo,''),'\n',' ')       memoGraph,
                         IFNULL(admin_memo.memo,'')       memo
-                    FROM (SELECT DISTINCT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 100) tmp WHERE ".$dateWhere.") tmpDate
+                    FROM (SELECT DISTINCT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 30) tmp WHERE ".$dateWhere.") tmpDate
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m') ) tmpInstall2Men ON (tmpInstall2Men.date = tmpDate.keydate)
@@ -240,10 +240,12 @@
                         dtb_list.text,
                         dtb_list.iine,
                         dtb_list.comment_count,
+                        mtb_user.name,
                         FROM_UNIXTIME(dtb_list.created) created
                     FROM dtb_list
-                    WHERE deleted = 0
-                    ORDER BY id DESC
+                    INNER JOIN mtb_user ON dtb_list.mtb_user_id = mtb_user.id
+                    WHERE dtb_list.deleted = 0
+                    ORDER BY dtb_list.id DESC
                     LIMIT ".$limit;
             $param = array();
             $result = $this -> getRows($SQL,$param);

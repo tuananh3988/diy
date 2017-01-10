@@ -24,7 +24,7 @@
     <th >投稿ユーザーID</th>
     <th >画像</th>
     <th >投稿タイプ</th>
-    <th >タイトル</th>
+    <th >投稿者</th>
     <th >テキスト</th>
     <th >投稿日</th>
     <th >削除</th>
@@ -36,7 +36,7 @@
 		<td>{$aja.mtb_user_id}</td>
 		<td><img src="{$aja.image}" width="200px"></td>
 		<td>{$aja.type}</td>
-		<td>{$aja.title}</td>
+		<td>{$aja.name}</td>
 		<td>{$aja.text}</td>
 		<td>{$aja.created}</td>
 		<td><input type="button" onclick="deleteList({$aja.id})" value="削除"></td>
