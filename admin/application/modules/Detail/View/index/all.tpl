@@ -8,6 +8,14 @@
                 width: 100%;
                 height: 500px;
             }
+            
+            .wrap-table {
+                overflow-x: scroll;
+            }
+            
+            .wrap-table table th {
+                min-width: 70px;
+            }
         </style>
 
         <!-- Resources -->
@@ -204,7 +212,7 @@
                 }
             });
         </script>
-
+        <div>
         <form method="post"id="datechange" action="/all">
             <input type="text" id="date1" name="date1" value="{$date1}">〜<input type="text" id="date2" name="date2" value="{$date2}"><input type="submit" value="期間変更">
         </form>
@@ -217,6 +225,8 @@
 
         <!-- HTML -->
         <div id="chartdiv"></div>	
+        </div>
+        <div class="wrap-table">
         <table border=1>
             <thead>
                 <tr>
@@ -295,5 +305,6 @@
                 </tr>
             {/foreach}
         </table>
+        </div>
     </body>
 </html>
