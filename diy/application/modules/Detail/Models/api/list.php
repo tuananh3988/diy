@@ -27,7 +27,8 @@
                 $SQL = "SELECT
                             ".SQL_LIST_RESP_DATA."
                         FROM dtb_list_detail
-                        WHERE dtb_list_id = ?";
+                        WHERE dtb_list_id = ?
+                        ORDER BY id";
                 $result['reshipi'] = $this -> getRows($SQL,$param);
                 
                 $SQL = "SELECT
@@ -379,6 +380,10 @@
             $param = array($this->_getParam('listID'),$this -> _userData['id'],$this->_getParam('returnUserID'),$this->_getParam('listCommentText'),time());
             $st =  $this -> executeIns($SQL,$param);
             
+            if($this->_getParam('returnUserID') && $this -> _userData['id'] != $this->_getParam('returnUserID')){
+                $this -> _sendPush($this->_getParam('returnUserID'),$this -> _userData['name'] ."さんが、あなたのレシピにコメントしました！",1,false);
+            }
+
             $SQL = "SELECT
                         mtb_user_id
                     FROM dtb_list
@@ -403,8 +408,169 @@
             return $st;
         }
         
-        public function setAdd()
+       public function setAdd()
         {
+       // var_dump($this->_itemCheck('req_src'));exit;
+    if($this->_itemCheck('req_src') && $this->_getParam('req_src')=='android'){
+        
+        //print_r($this -> _userData['id']); exit();
+        
+        $connections = parse_ini_file(dirname(__FILE__).'/../../../../configs/config.ini');
+                $dbname      = $connections['DB.name'];
+        $username        = $connections['DB.username'];
+        $password        = $connections['DB.password'];
+        $servername        = $connections['DB.host'];
+        
+                
+       /* $servername = "localhost";
+    $username = "root";
+     $password = "";
+    $dbname = "pokemon1_diy"; */
+    try {
+        $pdo = new PDO("mysql:host=$servername;dbname=$dbname;port=3306", $username, $password);
+           $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+     } catch (PDOException $e) {
+        die("Could not connect to the database $dbname :" . $e->getMessage());
+    }
+    
+        
+        $recipe1= $this->_getParam('reshipis');
+    $zairyos1= $this->_getParam('zairyos');
+    $id= $this -> _userData['id'];
+    $listImage= $this->_getParam('listImage');
+    $listType= $this->_getParam('listType');
+    $listTitle= $this->_getParam('listTitle');
+    $listText= $this->_getParam('listText');
+    
+$replace=";";
+$from = "";
+                    
+//$recipe1= str_replace($replace,$from,$abc);
+//$zairyos1=str_replace($replace,$from,$abc);
+$id= str_replace($replace,$from,$id);
+$listImage=str_replace($replace,$from,$listImage);
+$listType= str_replace($replace,$from,$listType);
+$listType= str_replace($replace,$from,$listType);
+$listTitle=str_replace($replace,$from,$listTitle);
+
+
+ str_replace($replace,$from,$abc);
+    // (print_r($recipe1));
+    //exit();
+    $timess =time();
+    
+       try 
+       {
+    // echo $this->_getParam('listText'); exit();
+    //add data into dtb_list  
+    
+    $SQL = "INSERT INTO dtb_list(mtb_user_id,image,type,title,text,created)";
+            $param = array($this -> _userData['id'],$this->_getParam('listImage'),$this->_getParam('listType'),$this->_getParam('listTitle'),$this->_getParam('listText'),time());
+             $this -> executeIns($SQL,$param);
+            
+                         
+          // $sqlinsertdtb_list = "INSERT INTO `dtb_list`( `mtb_user_id`, `image`, `type`, `title`, `text`,`created`)VALUES ('$id','$listImage','$listType','$listTitle','".$this->_getParam('listText')."',$timess)";
+           //   $pdo->exec($sqlinsertdtb_list);
+            $last_id =$this -> getLastID('dtb_list');
+            echo "New record created successfully ".$last_id."<br>";
+        }
+        catch(PDOException $e)
+        {
+        echo $sqlinsertdtb_list . "<br>" . $e->getMessage();
+        }
+    
+
+    ///add post recipe data  into table dtb_list_detail
+
+    $recipe2 = json_decode($recipe1);
+    $lengthofrecipe = count($recipe2);
+
+    for($i=0;$i<$lengthofrecipe;$i++)
+    {
+    $reshipi = $recipe[$i];
+    
+    //echo $reshipi['listResipiText'];
+    //die;
+    
+    //////////////////////////////////////////////////////////////////////////////////
+    $replace=";";
+$from = "";
+        $recipetext= $recipe2[$i]->listResipiText;
+        $recipeimage=$recipe2[$i]->listResipiImage;
+        $recipetext2=str_replace($replace,$from,$recipetext);
+        $recipeimage= str_replace($replace,$from,$recipeimage);
+        
+            // $recipetext= mb_convert_encoding($recipetext2, "UTF-8");
+             
+           //  echo $recipetext;
+            //   echo $recipetext2;
+
+        
+        
+        try 
+        {
+        /*
+        $SQLinsertdtb_list_detail = "INSERT INTO `dtb_list_detail`(`dtb_list_id`, `text`, `image`, `created`) VALUES ('$last_id','$recipetext','$recipeimage','$timess')";
+        $pdo->exec($SQLinsertdtb_list_detail);
+        */
+        
+        
+        $SQL = "INSERT INTO dtb_list_detail(dtb_list_id,text,image,created)";
+                $param = array($last_id,$recipetext2,$recipeimage,time());////////////////////////////////
+                $this -> executeIns($SQL,$param);
+        
+
+        } 
+
+        catch(PDOException $e)
+        {
+         echo $SQLinsertdtb_list_detail . "<br>" . $e->getMessage();
+        }
+
+    }
+    ///add post recipe data  into table dtb_list_detail2
+    //echo  $zairyos1;
+    $zairyos2 = json_decode($zairyos1);
+    //print_r($zairyos2 );
+    $lengthofzairyos = count($zairyos2);
+
+    for($i=0;$i<$lengthofzairyos;$i++)
+    {
+    $replace=";";
+$from = "";
+        $listZairyoTitle= $zairyos2[$i]->listZairyoTitle;
+        $listZairyoCount=$zairyos2[$i]->listZairyoCount;
+        $listZairyoTitle=str_replace($replace,$from,$listZairyoTitle);
+        $listZairyoCount= str_replace($replace,$from,$listZairyoCount);
+        
+        try 
+        {
+        
+        /*
+    $SQLinsertdtb_list_detail2 =    "INSERT INTO dtb_list_detail2(dtb_list_id,title,cnt,created)
+         VALUES ('$last_id','$listZairyoTitle','$listZairyoCount','$timess')";
+        $pdo->exec($SQLinsertdtb_list_detail2);
+*/
+
+
+                $SQL = "INSERT INTO dtb_list_detail2(dtb_list_id,title,cnt,created)";
+                $param = array($last_id,$listZairyoTitle,$listZairyoCount,time());
+                $this -> executeIns($SQL,$param);
+
+
+        } 
+
+        catch(PDOException $e)
+        {
+         echo $SQLinsertdtb_list_detail2 . "<br>" . $e->getMessage();
+        }
+
+    }
+
+        
+        
+        } else {
+        
             $SQL = "INSERT INTO dtb_list(mtb_user_id,image,type,title,text,created)";
             $param = array($this -> _userData['id'],$this->_getParam('listImage'),$this->_getParam('listType'),$this->_getParam('listTitle'),$this->_getParam('listText'),time());
             $this -> executeIns($SQL,$param);
@@ -488,7 +654,7 @@
                     continue;
                 }
                 $SQL = "INSERT INTO dtb_list_detail(dtb_list_id,text,image,created)";
-                $param = array($listID,$reshipi['listResipiText'],$reshipi['listResipiImage'],time());
+                $param = array($listID,$reshipi['listResipiText'],$reshipi['listResipiImage'],time());////////////////////////////////
                 $this -> executeIns($SQL,$param);
             }
             
@@ -503,7 +669,7 @@
                 $this -> executeIns($SQL,$param);
             }
             
-            
+            }
             return true;
         }
         

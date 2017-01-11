@@ -140,7 +140,8 @@
             $SQL = "SELECT
                         ".SQL_LIST_DATA."
                     FROM dtb_list
-                    WHERE mtb_user_id = ? AND deleted = 0";
+                    WHERE mtb_user_id = ? AND deleted = 0
+                    ORDER BY dtb_list.id DESC";
             $param = array($this -> _userData['id']);
             $result = $this -> getRows($SQL,$param);
             return $result;

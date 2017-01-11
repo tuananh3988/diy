@@ -74,15 +74,25 @@
         
         public function osusumeUser()
         {
+            $SQL = "SELECT DISTINCT
+                        ".SQL_USER_DATA."
+                    FROM mtb_user
+                    LEFT JOIN dtb_list ON mtb_user.id  = dtb_list.mtb_user_id
+                    WHERE mtb_user.deleted     = 0 AND dtb_list.deleted = 0 AND mtb_user.image != '' AND mtb_user.id != 1 AND mtb_user.id != 12 AND mtb_user.id != ?
+                    GROUP BY mtb_user.id
+                    ORDER BY count(dtb_list.image) DESC
+                    LIMIT 28";
+            $param = array($this -> _userData['id']);
+            $result1 = $this -> getRows($SQL,$param);
+            
             $SQL = "SELECT
                         ".SQL_USER_DATA."
                     FROM mtb_user
-                    WHERE image != '' AND id != ?
-                    ORDER BY id DESC
-                    LIMIT 10";
+                    WHERE id in (1,12)";
             $param = array($this -> _userData['id']);
-            $result = $this -> getRows($SQL,$param);
-            
+            $result2 = $this -> getRows($SQL,$param);
+            $result = array_merge($result2, $result1);
+
             for($i=0;$i<count($result);$i++){
                 $this -> addFollowStatus($result[$i]);
                 
@@ -90,23 +100,27 @@
                              dtb_list.id             listID,
                              dtb_list.image          listImage
                         FROM dtb_list
-                        WHERE mtb_user_id = ?
+                        WHERE mtb_user_id = ? AND image != '' AND image IS NOT NULL
                         AND   deleted     = 0
                         ORDER BY id DESC
                         LIMIT 3";
                 $param = array($result[$i]['userID']);
                 $result[$i]['listData'] = $this -> getRows($SQL,$param);
             }
+
+            $arr0 = array();
             $arr1 = array();
             $arr2 = array();
             foreach($result as $row){
                 //echo $row['listImage'];
-                if(isset($row['listData'][0]['listImage']))
+                if ($row['userID'] == '1' || $row['userID'] == '12') {
+                    $arr0[] = $row;
+                }else if(isset($row['listData'][0]['listImage']))
                     $arr1[] = $row;
                 else 
                     $arr2[] = $row;                 
             }             
-            $output = array_merge(array_reverse($arr1),array_reverse($arr2));
+            $output = array_merge($arr0, array_reverse($arr1),array_reverse($arr2));
             return $output;       
             //return $result;
         }
