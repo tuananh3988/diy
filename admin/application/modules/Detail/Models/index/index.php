@@ -91,11 +91,36 @@
             return $result;
         }
         
-        public function getFirstData()
+        public function getFirstData($date)
         {
-            
+            $install = $this->getInstall($date);
+            $deactive = $this->getDeactive($date);
+            var_dump($deactive);
         }
         
+        public function getInstall($date) {
+            $sql = "SELECT count(*) install
+                    FROM  mtb_user 
+                    WHERE `name` != '' 
+                    AND DATE_FORMAT(from_unixtime(created),'%Y-%m-%d') < '$date'";
+            
+            $param  = array();
+            $result = $this -> getRow($sql, $param);
+            return $result;
+        }
+        
+        public function getDeactive($date) {
+            $sql = "SELECT count(*) deactive
+                    FROM  mtb_user 
+                    WHERE deleted = 1 
+                    AND DATE_FORMAT(from_unixtime(deleted_date),'%Y-%m-%d') < '$date'";
+            
+            $param  = array();
+            $result = $this -> getRow($sql, $param);
+            return $result;
+        }
+
+
         public function getAllDataMonth()
     	{
         	
