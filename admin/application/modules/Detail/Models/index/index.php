@@ -3,23 +3,25 @@
     	
     	public function getAllData()
     	{
-        	
-			$date1  = $this->_getParam('date1',"");
-			$date2  = $this->_getParam('date2',"");
-			
-			$dateWhere = "";
-			if($date1 != ""){
-    			$dateWhere = " DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') >= '".$date1."' ";
+                
+            if ($this->_getParam('date1') == -1 && $this->_getParam('date2') == -1) {
+                $days = 30;
+                $date2 = date("Y-m-d");
+                $date1 = "2016/09/27";
             }
-            else{
-    			$dateWhere = " DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') >= '2016/09/27' ";
+            else {
+                $date1  = $this->_getParam('date1', "2016/09/27");
+                $date1 = empty($date1) ? "2016/09/27" : $date1;
+                $date2  = $this->_getParam('date2', date("Y-m-d"));
+                $date2 = empty($date2) ? date("Y-m-d") : $date2;
+                $datetime1 = date_create($date1);
+                $datetime2 = date_create($date2);
+                $interval = date_diff($datetime1, $datetime2);
+                $days = $interval->format("%a") + 1;
             }
-			
-			if($date2 != ""){
-    			$dateWhere .= " AND DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') <= '".$date2."' ";
-            }
-			
-        	
+            
+            $select = "(SELECT DATE_FORMAT(date_add('$date2', interval tmp.generate_series - $days day), '%Y/%m/%d') keydate,DATE_FORMAT(date_add('$date2', interval tmp.generate_series - $days day), '%Y-%m-%d') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT $days) tmp)";
+
         	$SQL = "SELECT
                         tmpDate.keydate2                 keydate,
                         IFNULL(tmpInstall.installCnt,0)  installCnt,
@@ -50,8 +52,9 @@
                         
                         IFNULL(tmpListUser.listCnt,0)    listUserCnt,
                         IFNULL(tmpList2User.listCnt,0)   listUserCnt2
-                        
-                    FROM (SELECT DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y/%m/%d') keydate,DATE_FORMAT(date_add(CURDATE(), interval tmp.generate_series - 30 day), '%Y-%m-%d') keydate2 FROM (SELECT 0 generate_series FROM DUAL WHERE (@num:=1-1)*0 UNION ALL SELECT @num:=@num+1 FROM `information_schema`.COLUMNS LIMIT 30) tmp WHERE ".$dateWhere.") tmpDate
+
+                    FROM $select tmpDate
+
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall ON (tmpInstall.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2 ON (tmpInstall2.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) installCnt FROM mtb_user WHERE name != '' AND type = 1 AND sex = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') ) tmpInstall2Men ON (tmpInstall2Men.date = tmpDate.keydate)

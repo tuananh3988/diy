@@ -11,6 +11,9 @@
             $dataMonth = $this -> _model -> getAllDataMonth();
             $datas = array();
             foreach ($data as $k => $d) {
+                if ($k == 0) {
+                    $first = $d;
+                }
                 $date = explode('-', $d['keydate']);
                 if ($date[2] == '01' && isset($data[$k - 1])) {
                     $date = explode('-', $data[$k - 1]['keydate']);
@@ -26,6 +29,8 @@
                 $d['month'] = 0;
                 $datas[] = $d;
             }
+            
+            var_dump($first);
             
     	    $this -> setViewParam('date1',$this->_getParam('date1',""));
     	    $this -> setViewParam('date2',$this->_getParam('date2',""));
