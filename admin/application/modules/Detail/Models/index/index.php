@@ -91,6 +91,11 @@
             return $result;
         }
         
+        public function getFirstData()
+        {
+            
+        }
+        
         public function getAllDataMonth()
     	{
         	

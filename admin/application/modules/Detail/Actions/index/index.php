@@ -30,6 +30,8 @@
                 $datas[] = $d;
             }
             
+            $dataFirst = $this -> _model -> getFirstData($first['keydate']);
+            
             var_dump($first);
             
     	    $this -> setViewParam('date1',$this->_getParam('date1',""));
