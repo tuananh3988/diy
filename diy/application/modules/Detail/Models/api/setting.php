@@ -15,7 +15,7 @@
 	        		$this->execute($SQL,$param);
         		}
 		        $SQL = "INSERT INTO mtb_token(uuid,token,type,created)";
-		        $insertParam = array($this->_getParam('uuid'),$this->_getParam('token'),$this->_getParam('device_type', 0),time());
+		        $insertParam = array($this->_getParam('uuid'),$this->_getParam('token'),$this->_getParam('device_type', 1),time());
 		        $return = $this->executeIns($SQL,$insertParam);
         	}
         	else{
@@ -24,7 +24,7 @@
                                                         type = ?,
 		        					created = ?
 						WHERE uuid = '".$this->_getParam('uuid')."'";
-				$where = array($this->_getParam('token'),$this->_getParam('device_type', 0),time());
+				$where = array($this->_getParam('token'),$this->_getParam('device_type', 1),time());
 		        $return = $this->execute($SQL,$where);
         	}
 	        return $return;
