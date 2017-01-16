@@ -280,9 +280,9 @@
                     <td>{$aja.deactiveIosCnt}（男{$aja.deactiveIosCntMen}・女{$aja.deactiveIosCntWomen}）</td>
                     <td>{$aja.deactiveAosCnt}（男{$aja.deactiveAosCntMen}・女{$aja.deactiveAosCntWomen}）</td>
                     <td>{$total7}</td>
-                    <td>{if $aja.installCnt2 eq 0}0{else}{(($aja.installCnt)/($aja.installCnt2))|string_format:"%.2f"}{/if}</td>
-                    <td>{if $aja.installCntAos2 eq 0}0{else}{$aja.installCntAos/$aja.installCntAos2|string_format:"%.2f"}{/if}</td>
-                    <td>{if ($aja.installCnt2 + $aja.installCntAos2) eq 0}0{else}{(($aja.installCnt + $aja.installCntAos)/($aja.installCnt2 + $aja.installCntAos2))|string_format:"%.2f"}{/if}</td>
+                    <td>{if $aja.installCnt2 eq 0}0{else}{(($aja.installCnt2)/($aja.installCnt)*100)|string_format:"%.2f"}%{/if}</td>
+                    <td>{if $aja.installCntAos2 eq 0}0{else}{$aja.installCntAos2/$aja.installCntAos*100|string_format:"%.2f"}%{/if}</td>
+                    <td>{if ($aja.installCnt2 + $aja.installCntAos2) eq 0}0{else}{(($aja.installCnt2 + $aja.installCntAos2)/($aja.installCnt + $aja.installCntAos)*100)|string_format:"%.2f"}%{/if}</td>
                     
                     <td>{$aja.loginCnt}</td>
                     <td>{$aja.loginCntAos}</td>
