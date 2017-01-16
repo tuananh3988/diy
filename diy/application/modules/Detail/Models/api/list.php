@@ -41,7 +41,7 @@
             $SQL = "SELECT
     	                ".SQL_TAG_LIST."
                     FROM mtb_tag
-                    WHERE sort > -1
+                    WHERE sort > -1 AND CHAR_LENGTH(tag) <= 5 
                     ORDER BY sort ASC 
                     LIMIT 10";
             $param = array();
@@ -61,7 +61,7 @@
         		$SQL = "SELECT
         		            id
         		        FROM mtb_tag
-        		        WHERE tag LIKE ?";
+        		        WHERE tag LIKE ? AND CHAR_LENGTH(tag) <= 5";
                 $param = array("%".$this->_getParam('word')."%");
                 $result = $this -> getRows($SQL,$param);
                 
@@ -379,10 +379,7 @@
             $SQL = "INSERT INTO dtb_list_comment(dtb_list_id,mtb_user_id,return_user_id,text,created)";
             $param = array($this->_getParam('listID'),$this -> _userData['id'],$this->_getParam('returnUserID'),$this->_getParam('listCommentText'),time());
             $st =  $this -> executeIns($SQL,$param);
-            
-            if($this->_getParam('returnUserID') && $this -> _userData['id'] != $this->_getParam('returnUserID')){
-                $this -> _sendPush($this->_getParam('returnUserID'),$this -> _userData['name'] ."さんが、あなたのレシピにコメントしました！",1,false);
-            }
+
 
             $SQL = "SELECT
                         mtb_user_id
@@ -393,6 +390,13 @@
             
             if(!isset($userID['mtb_user_id'])){
                 return $st;
+            }
+
+
+            if($this->_getParam('returnUserID') && $this -> _userData['id'] != $this->_getParam('returnUserID')
+                && $userID['mtb_user_id'] != $this->_getParam('returnUserID')){
+
+                $this -> _sendPush($this->_getParam('returnUserID'),$this -> _userData['name'] ."さんが、あなたのレシピにコメントしました！",1,false);
             }
             
             $SQL = "UPDATE dtb_list

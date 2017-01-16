@@ -153,7 +153,8 @@
                         ".SQL_LIST_DATA."
                     FROM dtb_list_favorite
                     LEFT JOIN dtb_list ON (dtb_list.id = dtb_list_favorite.dtb_list_id)
-                    WHERE dtb_list_favorite.deleted = 0 AND dtb_list_favorite.mtb_user_id = ?";
+                    WHERE dtb_list_favorite.deleted = 0 AND dtb_list_favorite.mtb_user_id = ?
+                    ORDER BY dtb_list_favorite.dtb_list_id DESC";
             $param = array($this -> _userData['id']);
             $result = $this -> getRows($SQL,$param);
             return $result;

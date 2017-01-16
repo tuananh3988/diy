@@ -80,7 +80,7 @@
                     LEFT JOIN dtb_list ON mtb_user.id  = dtb_list.mtb_user_id
                     WHERE mtb_user.deleted     = 0 AND dtb_list.deleted = 0 AND mtb_user.image != '' AND mtb_user.id != 1 AND mtb_user.id != 12 AND mtb_user.id != ?
                     GROUP BY mtb_user.id
-                    ORDER BY count(dtb_list.image) DESC
+                    ORDER BY count(dtb_list.image) ASC
                     LIMIT 28";
             $param = array($this -> _userData['id']);
             $result1 = $this -> getRows($SQL,$param);
@@ -188,7 +188,7 @@
         	    $SQL = "SELECT
         	                ".SQL_TAG_LIST."
         	            FROM mtb_tag
-        	            WHERE tag like ?";
+        	            WHERE tag like ? AND CHAR_LENGTH(tag) <= 5";
                 $param = array("%".$this->_getParam('word')."%");
                 $result = $this -> getRows($SQL,$param);
                 
