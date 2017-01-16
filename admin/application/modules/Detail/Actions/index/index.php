@@ -32,12 +32,12 @@
             
             $dataFirst = $this -> _model -> getFirstData($first['keydate']);
             
-            var_dump($first);
             
     	    $this -> setViewParam('date1',$this->_getParam('date1',""));
     	    $this -> setViewParam('date2',$this->_getParam('date2',""));
             $ids = "";
             
+            $this -> setViewParam('dataFirst',$dataFirst);
     	    $this -> setViewParam('data',$data);
             $this -> setViewParam('datas',$datas);
         }

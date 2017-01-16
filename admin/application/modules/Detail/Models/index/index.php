@@ -95,7 +95,13 @@
         {
             $install = $this->getInstall($date);
             $deactive = $this->getDeactive($date);
-            var_dump($deactive);
+            $favorite = $this->getFavorite($date);
+            $comment = $this->getComment($date);
+            $tag = $this->getTag($date);
+            
+            $first = array_merge($install, $deactive, $favorite, $comment, $tag);
+            return $first;
+             
         }
         
         public function getInstall($date) {
@@ -119,7 +125,37 @@
             $result = $this -> getRow($sql, $param);
             return $result;
         }
-
+        
+        public function getFavorite($date) {
+            $sql = "SELECT count(*) favorite
+                    FROM dtb_list_favorite 
+                    WHERE dtb_list_favorite.deleted = 0  
+                    AND DATE_FORMAT(from_unixtime(created),'%Y-%m-%d') < '$date'";
+            
+            $param  = array();
+            $result = $this -> getRow($sql, $param);
+            return $result;
+        }
+        
+        public function getComment($date) {
+            $sql = "SELECT count(*) comment
+                    FROM dtb_list_comment 
+                    WHERE DATE_FORMAT(from_unixtime(created),'%Y-%m-%d') < '$date'";
+            
+            $param  = array();
+            $result = $this -> getRow($sql, $param);
+            return $result;
+        }
+        
+        public function getTag($date) {
+            $sql = "SELECT count(*) tag
+                    FROM dtb_list_tag 
+                    WHERE DATE_FORMAT(from_unixtime(created),'%Y-%m-%d') < '$date'";
+            
+            $param  = array();
+            $result = $this -> getRow($sql, $param);
+            return $result;
+        }
 
         public function getAllDataMonth()
     	{

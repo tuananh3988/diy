@@ -259,10 +259,10 @@
                     <th >累計タグ数</th>
                 </tr>
             </thead>
-            {$total7 = 0}
-            {$total21 = 0}
-            {$total23 = 0}
-            {$total25 = 0}
+            {$total7 = $dataFirst.install - $dataFirst.deactive}
+            {$total21 = $dataFirst.favorite}
+            {$total23 = $dataFirst.comment}
+            {$total25 = $dataFirst.tag}
             {foreach from=$datas item=aja name=pero}
                 {if $aja.month neq 1}
                     {$total7 = $total7 + $aja.totalLK}
