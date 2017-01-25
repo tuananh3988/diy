@@ -284,9 +284,9 @@
                     <td>{if $aja.installCntAos2 eq 0}0{else}{$aja.installCntAos2/$aja.installCntAos*100|string_format:"%.2f"}%{/if}</td>
                     <td>{if ($aja.installCnt2 + $aja.installCntAos2) eq 0}0{else}{(($aja.installCnt2 + $aja.installCntAos2)/($aja.installCnt + $aja.installCntAos)*100)|string_format:"%.2f"}%{/if}</td>
                     
-                    <td>{$aja.loginCnt}</td>
-                    <td>{$aja.loginCntAos}</td>
-                    <td>{$aja.loginCnt + $aja.loginCntAos}</td>
+                    <td>{$aja.loginCnt|string_format:"%.2f"}</td>
+                    <td>{$aja.loginCntAos|string_format:"%.2f"}</td>
+                    <td>{($aja.loginCnt + $aja.loginCntAos)|string_format:"%.2f"}</td>
                     <td>{$aja.listCnt}</td>
                     <td>{$aja.listCntAos}</td>
                     <td>{$aja.listCnt + $aja.listCntAos}</td>
