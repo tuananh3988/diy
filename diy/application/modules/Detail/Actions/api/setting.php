@@ -11,6 +11,10 @@
             }
         	$this -> _retrunData = $this -> _model -> insertToken();
     	}
+        
+        public function installAction(){
+        	$this -> _retrunData = $this -> _model -> install();
+    	}
     	
     	public function getImageURLAction(){
         	if(!isset($_FILES["image"])){

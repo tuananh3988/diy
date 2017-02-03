@@ -1,7 +1,12 @@
 <?PHP
 	class SettingModel extends Model {
 	
-		
+	public function install(){
+            $SQL = "INSERT INTO mtb_install(uuid, created)";
+            $insertParam = array($this->_getParam('uuid'),time());
+            return $this->executeIns($SQL,$insertParam);
+        }
+            
 		//push登録
         public function insertToken(){
                 $return = false;
