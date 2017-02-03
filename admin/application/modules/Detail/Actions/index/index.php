@@ -6,9 +6,10 @@
 	    
 	    public function allAction(){
 	        $this -> _settingSmarty();
-            
+                
             $data = $this -> _model -> getAllData();
             $dataMonth = $this -> _model -> getAllDataMonth();
+            
             $datas = array();
             foreach ($data as $k => $d) {
                 if ($k == 0) {
@@ -20,6 +21,10 @@
                     $month = $date[0] . '-' . $date[1];
                     foreach ($dataMonth as $km => $m) {
                         if ($month == $m['keydate']) {
+                            $daysOfM = date("t",mktime(0,0,0,$date[1],1,$date[0]));
+                            $m['loginCnt'] = $m['loginCnt']/$daysOfM;
+                            $m['loginCntAos'] = $m['loginCntAos']/$daysOfM;
+                            
                             $m['month'] = 1;
                             $datas[] = $m;
                         }

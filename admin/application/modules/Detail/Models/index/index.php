@@ -79,7 +79,7 @@
 
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list_favorite WHERE dtb_list_favorite.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListFavorite ON (tmpListFavorite.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list_comment GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListComment ON (tmpListComment.date = tmpDate.keydate)
-                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM dtb_list_tag GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListTag ON (tmpListTag.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(1) listCnt FROM mtb_tag GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListTag ON (tmpListTag.date = tmpDate.keydate)
                     
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpListUser ON (tmpListUser.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m/%d') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 AND dtb_list.type=2  GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m/%d')) tmpList2User ON (tmpList2User.date = tmpDate.keydate)
@@ -149,7 +149,7 @@
         
         public function getTag($date) {
             $sql = "SELECT count(*) tag
-                    FROM dtb_list_tag 
+                    FROM mtb_tag 
                     WHERE DATE_FORMAT(from_unixtime(created),'%Y-%m-%d') < '$date'";
             
             $param  = array();
@@ -234,7 +234,7 @@
 
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list_favorite WHERE dtb_list_favorite.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListFavorite ON (tmpListFavorite.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list_comment GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListComment ON (tmpListComment.date = tmpDate.keydate)
-                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) listCnt FROM dtb_list_tag GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListTag ON (tmpListTag.date = tmpDate.keydate)
+                    LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(1) listCnt FROM mtb_tag GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListTag ON (tmpListTag.date = tmpDate.keydate)
                     
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpListUser ON (tmpListUser.date = tmpDate.keydate)
                     LEFT JOIN (SELECT DATE_FORMAT(from_unixtime(created),'%Y/%m') date,COUNT(DISTINCT(mtb_user_id)) listCnt FROM dtb_list WHERE dtb_list.deleted = 0 AND dtb_list.type=2  GROUP BY DATE_FORMAT(from_unixtime(created),'%Y/%m')) tmpList2User ON (tmpList2User.date = tmpDate.keydate)
