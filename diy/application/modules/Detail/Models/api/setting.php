@@ -2,8 +2,8 @@
 	class SettingModel extends Model {
 	
 	public function install(){
-            $SQL = "INSERT INTO mtb_install(uuid, created)";
-            $insertParam = array($this->_getParam('uuid'),time());
+            $SQL = "INSERT INTO mtb_install(uuid,device_type, created)";
+            $insertParam = array($this->_getParam('uuid'),$this->_getParam('device_type', 1),time());
             return $this->executeIns($SQL,$insertParam);
         }
             
