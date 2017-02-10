@@ -107,8 +107,7 @@
         public function getInstall($date) {
             $sql = "SELECT count(*) install
                     FROM  mtb_user 
-                    WHERE `name` != '' 
-                    AND DATE_FORMAT(from_unixtime(created),'%Y-%m-%d') < '$date'";
+                    WHERE DATE_FORMAT(from_unixtime(created),'%Y-%m-%d') < '$date'";
             
             $param  = array();
             $result = $this -> getRow($sql, $param);
